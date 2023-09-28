@@ -6,11 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [package.metadata.bootimage]
 build-command = ["build"]
-
+test-args = ["-device","isa-debug-exit,iobase=0xF4,iosize=0x04","-serial","stdio"]
+test-timeout = 300
 
 [dependencies]
 bootloader = "*"
-volatile = "*"
+# volatile = "*"
+spin = "*"
+# x86_64 = "*"
+uart_16550 = "*"
+
+[dependencies.lazy_static]
+features = ["spin_no_std"]
 
 # 禁用栈展开
 [profile.dev]
