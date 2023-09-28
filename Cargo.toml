@@ -13,7 +13,7 @@ test-timeout = 300
 bootloader = "*"
 # volatile = "*"
 spin = "*"
-# x86_64 = "*"
+x86_64 = "*"
 uart_16550 = "*"
 
 [dependencies.lazy_static]
