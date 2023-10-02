@@ -43,6 +43,9 @@ struct Selectors {
 pub fn init_gdt() {
     GDT.0.load();
 
+    crate::println!("glob descri table LOADED");
+
+
 	unsafe {
 		// 修改CS寄存器 指定使用custom的gdt和tss
 		x86_64::instructions::segmentation::CS::set_reg(GDT.1.code_selector);

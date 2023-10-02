@@ -16,6 +16,7 @@ spin = "*"
 x86_64 = "*"
 uart_16550 = "*"
 pic8259 = "0.10.4"
+pc-keyboard = "0.7.0"
 
 [dependencies.lazy_static]
 features = ["spin_no_std"]

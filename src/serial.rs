@@ -2,6 +2,7 @@ use uart_16550::SerialPort;
 use spin::Mutex;
 use lazy_static::lazy_static;
 
+
 lazy_static! {
 	pub static ref SERIAL1 : Mutex<SerialPort> = {
 		let mut serial_port  = unsafe { SerialPort::new (0x3F8 )};
@@ -11,12 +12,21 @@ lazy_static! {
 }
 
 
+use core::fmt;
 
+// 修复死锁
 #[doc(hidden)]
-pub fn _print(args: ::core::fmt::Arguments) {
+pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
-    SERIAL1.lock().write_fmt(args).expect("Printing to serial failed");
+    use x86_64::instructions::interrupts;
+
+    interrupts::without_interrupts(
+      || {
+        SERIAL1.lock().write_fmt(args).unwrap();
+      }  
+    );
 }
+
 
 /// Prints to the host through the serial interface.
 #[macro_export]

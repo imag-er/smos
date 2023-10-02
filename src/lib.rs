@@ -4,7 +4,7 @@ pub mod interrupts;
 pub mod vga_buffer;
 pub mod serial;
 pub mod gdt;
-
+pub mod enum_define;
 
 // 读取idt
 pub fn init() {
@@ -14,4 +14,11 @@ pub fn init() {
 		interrupts::PICS.lock().initialize();
 	};
 	x86_64::instructions::interrupts::enable();
+}
+
+// halt
+pub fn hlt_loop() -> ! {
+	loop {
+		x86_64::instructions::hlt();
+	}
 }

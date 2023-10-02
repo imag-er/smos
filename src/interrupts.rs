@@ -1,4 +1,4 @@
-use crate::{println, serial_println};
+use crate::{println, serial_println, enum_define::Key};
 use lazy_static::lazy_static;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 use pic8259::ChainedPics;
@@ -19,6 +19,7 @@ pub static  PICS: spin::Mutex<ChainedPics> =
 #[repr(u8)]
 pub enum InterruptIndex {
 	Timer = PIC_1_OFFSET,
+	Keyboard, // new
 }
 
 impl InterruptIndex {
@@ -41,6 +42,7 @@ lazy_static! {
 		};
 
 		idt[InterruptIndex::Timer.as_usize()].set_handler_fn(timer_interrupt_handler);
+		idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
         idt
     };
 }
@@ -57,14 +59,44 @@ extern "x86-interrupt" fn double_fault_handler(stack_frame: InterruptStackFrame,
 }
 
 extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame) {
-    print!(".");
-
+	// 通知cpu int已经结束
+	
 	unsafe {
 		PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.as_u8());
 	}
 }
 
+extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStackFrame) {
+	use x86_64::instructions::port::Port;
+	let mut port = Port::new(0x60);
+	let scancode : u8 = unsafe {
+		port.read()
+	};
 
+	// print!("{0:b} {0:o} {0:x}\n",scancode);
+	
+	use enum_define::KeyBoardMapper;
+	use spin::Mutex;
+
+	lazy_static! {
+		pub static ref KBMAPPER : Mutex<KeyBoardMapper> = Mutex::new(
+			KeyBoardMapper::new()
+		);
+	}
+
+	if let Key::Character(k) = KBMAPPER.lock().scancode_to_char(scancode) 
+	{
+		print!("{}",char::from_u32(k as u32).unwrap());
+		
+	}
+
+
+	unsafe {
+		PICS.lock().notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
+	}
+}
 pub fn init_idt() {
     IDT.load();
+    crate::println!("int descri table LOADED");
+
 }

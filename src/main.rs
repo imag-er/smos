@@ -14,17 +14,7 @@ fn panic(_info: &PanicInfo) -> ! {
 pub extern "C" fn _start() ->! {
     // 调用lib.rs中的init函数
     smos::init();
-    smos::println!("IDT inited");
-
-    // raise stack overflow
-    fn raise_sof()
-    {
-        raise_sof();
-    }    
-    raise_sof();
 
     
-    loop{
-
-    }
+    smos::hlt_loop();
 }
