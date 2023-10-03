@@ -10,13 +10,14 @@ test-args = ["-device","isa-debug-exit,iobase=0xF4,iosize=0x04","-serial","stdio
 test-timeout = 300
 
 [dependencies]
-bootloader = "*"
-# volatile = "*"
+bootloader = {version = "*" ,features = ["map_physical_memory"]}
 spin = "*"
 x86_64 = "*"
 uart_16550 = "*"
 pic8259 = "0.10.4"
-pc-keyboard = "0.7.0"
+linked_list_allocator = "0.10.5"
+
+
 
 [dependencies.lazy_static]
 features = ["spin_no_std"]

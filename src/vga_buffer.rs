@@ -1,6 +1,6 @@
 use core::fmt;
 
-use crate::enum_define::{ColorCode,Color};
+use crate::color::{ColorCode,Color};
 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

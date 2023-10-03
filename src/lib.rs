@@ -4,7 +4,14 @@ pub mod interrupts;
 pub mod vga_buffer;
 pub mod serial;
 pub mod gdt;
-pub mod enum_define;
+pub mod color;
+pub mod keyboard;
+pub mod memory;
+pub mod panic;
+pub mod allocator;
+
+
+extern crate alloc;
 
 // 读取idt
 pub fn init() {
