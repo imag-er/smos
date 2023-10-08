@@ -1,6 +1,6 @@
 use core::fmt;
 
-use crate::color::{ColorCode,Color};
+use crate::io::color::{ColorCode,Color};
 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -132,7 +132,7 @@ lazy_static! {
 // 定义print macro
 #[macro_export]
 macro_rules! print {
-    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::io::vga_buffer::_print(format_args!($($arg)*)));
 }
 
 #[macro_export]
